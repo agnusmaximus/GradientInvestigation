@@ -208,7 +208,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
     for variable_index, (variable, gradient) in enumerate(gradients_materialized):
         gradient_track[iteration][variable_index] = list(gradient.flatten())
 
-    for variable_index, list_gradients in gradient_track[iteration].items()[-2:-1]:
+    """for variable_index, list_gradients in gradient_track[iteration].items():
         list_gradients_with_weight_indices = zip(range(len(list_gradients)), list_gradients)
         largest_variables = sorted(list_gradients_with_weight_indices, key=lambda x : -abs(x[1]))
         print("Largest variables for variable %d:" % variable_index)
@@ -216,7 +216,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
             print(k)
         print("...")
         for k in largest_variables[-5:-1]:
-            print(k)
+            print(k)"""
 
     if iteration % PLOT_INTERVAL == 0 and iteration != 0:
         print("Plotting...")
@@ -225,7 +225,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
         start_index = max(0, iteration - PLOT_INTERVAL)
         for variable_index in range(num_variables):
             plt.cla()
-            plot_name = "Variable%d" % variable_index
+            plot_name = "Variable%d_iters_%d_to_%d" % (variable_index, start_index, iteration)
             for weight_index in range(num_weights_per_variable[variable_index]):
                 values = [abs(gradient_track[iteration_index][variable_index][weight_index]) for iteration_index in range(start_index, iteration)]
                 plt.plot(list(range(start_index, iteration)), values)
