@@ -59,7 +59,7 @@ tf.app.flags.DEFINE_string('train_dir', '/tmp/cifar10_train',
                            """and checkpoint.""")
 tf.app.flags.DEFINE_integer('evaluate_batch_size', 1000,
                             """Number of batches to run.""")
-tf.app.flags.DEFINE_float('dataset_fraction', 2,
+tf.app.flags.DEFINE_float('dataset_fraction', 1,
                             """Fraction of dataset to use for fractional repeated dataset""")
 tf.app.flags.DEFINE_float('learning_rate', .0001,
                             """Constant learning rate""")
@@ -298,8 +298,8 @@ def train():
             print("Evaluating...")
             sys.stdout.flush()
             t_evaluate_start = time.time()
-            acc, loss = model_evaluate(sess)
-            print("IInfo: %f %f %f %f" % (t_evaluate_start-sum(evaluate_times), new_epoch_float, acc, loss))
+            #acc, loss = model_evaluate(sess)
+            #print("IInfo: %f %f %f %f" % (t_evaluate_start-sum(evaluate_times), new_epoch_float, acc, loss))
             sys.stdout.flush()
             t_evaluate_end = time.time()
             evaluate_times.append(t_evaluate_end-t_evaluate_start)
