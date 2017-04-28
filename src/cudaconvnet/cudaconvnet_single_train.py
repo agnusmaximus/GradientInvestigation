@@ -206,6 +206,9 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
         print("Largest variables for variable %d:" % variable_index)
         for k in largest_variables[:5]:
             print(k)
+        print("...")
+        for k in largest_variables[-5:-1]:
+            print(k)
 
 def train():
     """Train CIFAR-10 for a number of steps."""
