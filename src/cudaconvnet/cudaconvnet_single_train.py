@@ -194,7 +194,7 @@ def get_next_fractional_batch(fractional_images, fractional_labels, cur_index, b
 def track_gradients(gradients_materialized, gradient_track, iteration):
     assert(iteration not in gradient_track.keys())
     gradient_track[iteration] = []
-    for variable_index in range(len(gradients_materialized)):
+    for variable_index, (variable, gradient) in enumerate(gradients_materialized):
         flattened_gradient = gradients_materialized[variable_index].flatten()
         for weight_index in range(len(flattened_gradient)):
             name = "Variable=%dWeight=%d" % (variable_index, weight_index)
