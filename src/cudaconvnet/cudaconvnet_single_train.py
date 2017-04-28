@@ -235,7 +235,6 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
             plt.savefig(plot_name + ".png")
 
         print("Done plotting...")
-        sys.exit(0)
 
         # Delete data from past iterations to save mem
         for i in range(start_index, iteration):
