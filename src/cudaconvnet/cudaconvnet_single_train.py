@@ -218,7 +218,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
         for k in largest_variables[-5:-1]:
             print(k)
 
-    if iteration % PLOT_INTERVAL == 0:
+    if iteration % PLOT_INTERVAL == 0 and iteration != 0:
         print("Plotting...")
 
         # Aggregate all data from past 10 iterations and plot
@@ -234,10 +234,11 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
             plt.savefig(plot_name + ".png")
 
         print("Done plotting...")
+        sys.exit(0)
 
         # Delete data from past iterations to save mem
         for i in range(start_index, iteration):
-            del gradient_track[iteration]
+            del gradient_track[i]
 
 def train():
     """Train CIFAR-10 for a number of steps."""
