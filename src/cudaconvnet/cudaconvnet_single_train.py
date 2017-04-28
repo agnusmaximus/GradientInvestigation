@@ -223,9 +223,9 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
 
         # Aggregate all data from past 10 iterations and plot
         start_index = max(0, iteration - PLOT_INTERVAL)
-        for variable_index in num_variables:
+        for variable_index in range(num_variables):
             plot_name = "Variable%d" % variable_index
-            for weight_index in num_weights_per_variable[variable_index]:
+            for weight_index in range(num_weights_per_variable[variable_index]):
                 values = [abs(gradient_track[iteration_index][variable_index][weight_index]) for iteration_index in range(start_index, iteration)]
                 plt.plot(list(range(start_index, iteration)), values)
             plt.xlabel("Iteration")
