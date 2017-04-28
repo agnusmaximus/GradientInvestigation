@@ -61,7 +61,7 @@ tf.app.flags.DEFINE_integer('evaluate_batch_size', 1000,
                             """Number of batches to run.""")
 tf.app.flags.DEFINE_float('dataset_fraction', 1,
                             """Fraction of dataset to use for fractional repeated dataset""")
-tf.app.flags.DEFINE_float('learning_rate', .0001,
+tf.app.flags.DEFINE_float('learning_rate', .01,
                             """Constant learning rate""")
 tf.app.flags.DEFINE_boolean("replicate_data_in_full", False,
                             'Whether to use training data replicated in full')

@@ -322,7 +322,7 @@ def loss(logits, labels, scope_name):
   labels = tf.cast(labels, tf.int64)
   cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(
       labels=labels, logits=logits, name='cross_entropy_per_example_'+scope_name)
-  cross_entropy_mean = tf.reduce_sum(cross_entropy, name='cross_entropy_'+scope_name)
+  cross_entropy_mean = tf.reduce_mean(cross_entropy, name='cross_entropy_'+scope_name)
   tf.add_to_collection('losses_'+scope_name, cross_entropy_mean)
 
   # The total loss is defined as the cross entropy loss plus all of the weight
