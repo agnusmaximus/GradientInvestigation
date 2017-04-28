@@ -67,7 +67,6 @@ tf.app.flags.DEFINE_boolean("replicate_data_in_full", False,
                             'Whether to use training data replicated in full')
 tf.app.flags.DEFINE_integer('dataset_replication_factor', 2,
                             'Number of times to replicate data. Only used if replicate_data_in_full is set to true')
-tf.app.flags.DEFINE_string('shared_filesystem_directory', '', 'Shared filesystem directory to write saved models')
 tf.app.flags.DEFINE_boolean("test_load_dumped_data_files", True,
                             'Sanity check data files')
 tf.app.flags.DEFINE_boolean("dropout", False,
@@ -313,7 +312,6 @@ def train():
         n_examples_processed += FLAGS.batch_size
 
 def main(argv=None):  # pylint: disable=unused-argument
-  assert(FLAGS.shared_filesystem_directory != '')
   cifar10.maybe_download_and_extract()
   if tf.gfile.Exists(FLAGS.train_dir):
     tf.gfile.DeleteRecursively(FLAGS.train_dir)
