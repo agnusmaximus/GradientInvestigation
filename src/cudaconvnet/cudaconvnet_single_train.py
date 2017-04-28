@@ -266,7 +266,7 @@ def train():
         labels = tf.placeholder(tf.int32, shape=(None,))
         logits = cifar10.inference(images, use_dropout=FLAGS.dropout)
         loss_op = cifar10.loss(logits, labels, scope_name)
-        train_op, grads = cifar10.train(loss_op, scope_name)
+        train_op, grads, lr_placeholder = cifar10.train(loss_op, scope_name)
         top_k_op = tf.nn.in_top_k(logits, labels, 1)
 
     # We keep track of all variables of the model for saving
@@ -355,11 +355,13 @@ def train():
             t_evaluate_end = time.time()
             evaluate_times.append(t_evaluate_end-t_evaluate_start)
 
+
         cur_epoch_track = max(cur_epoch_track, new_epoch_track)
         feed_dict = get_feed_dict(FLAGS.batch_size)
+        feed_dict[lr_placeholder] = FLAGS.learning_rate
         results = sess.run([train_op, grads], feed_dict=feed_dict)
         grads_materialized = results[1]
-        track_gradients(grads_materialized, gradient_track, cur_iteration)
+        #track_gradients(grads_materialized, gradient_track, cur_iteration)
         cur_iteration += 1
         n_examples_processed += FLAGS.batch_size
 
