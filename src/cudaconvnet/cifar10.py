@@ -373,7 +373,7 @@ def train(total_loss, scope_name):
 
   # Compute gradients.
   #opt = tf.train.GradientDescentOptimizer(FLAGS.learning_rate)
-  learning_rate = tf.Plaecholder(tf.float32, shape=())
+  learning_rate = tf.Placeholder(tf.float32, shape=())
   opt = tf.train.MomentumOptimizer(learning_rate, .1)
   grads = opt.compute_gradients(total_loss)
 
