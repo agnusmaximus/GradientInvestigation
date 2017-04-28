@@ -191,6 +191,15 @@ def get_next_fractional_batch(fractional_images, fractional_labels, cur_index, b
 
   return next_batch_images, next_batch_labels, next_index % fractional_labels.shape[0]
 
+def track_gradients(gradients_materialized, gradient_track, iteration):
+    assert(iteration not in gradient_track.keys())
+    gradient_track[iteration] = []
+    for variable_index in range(len(gradients_materialized)):
+        flattened_gradient = gradients_materialized[variable_index].flatten()
+        for weight_index in range(len(flattened_gradient)):
+            name = "Variable=%dWeight=%d" % (variable_index, weight_index)
+            gradient_track[iteration].append((name, flattened_gradient[weight_index]))
+
 def train():
     """Train CIFAR-10 for a number of steps."""
 
@@ -287,6 +296,7 @@ def train():
       evaluate_times = []
       cur_epoch_track = 0
       last_epoch_evaluated = 0
+      gradient_track = {}
       num_examples = images_fractional_train.shape[0]
       print("Starting training loop...")
       sys.stdout.flush()
@@ -307,7 +317,8 @@ def train():
         cur_epoch_track = max(cur_epoch_track, new_epoch_track)
         feed_dict = get_feed_dict(FLAGS.batch_size)
         results = sess.run([train_op, grads], feed_dict=feed_dict)
-        print(len(results))
+        grads_materialized = results[1]
+        track_gradients(grads_materialized, gradient_track, cur_iteration)
         cur_iteration += 1
         n_examples_processed += FLAGS.batch_size
 
