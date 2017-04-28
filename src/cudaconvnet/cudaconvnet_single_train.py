@@ -208,7 +208,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
     for variable_index, (variable, gradient) in enumerate(gradients_materialized):
         gradient_track[iteration][variable_index] = list(gradient.flatten())
 
-    for variable_index, list_gradients in gradient_track[iteration].items()[0]:
+    for variable_index, list_gradients in gradient_track[iteration].items()[-2:-1]:
         list_gradients_with_weight_indices = zip(range(len(list_gradients)), list_gradients)
         largest_variables = sorted(list_gradients_with_weight_indices, key=lambda x : -abs(x[1]))
         print("Largest variables for variable %d:" % variable_index)
