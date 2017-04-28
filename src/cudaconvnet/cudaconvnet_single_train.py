@@ -301,6 +301,7 @@ def train():
       print("Starting training loop...")
       sys.stdout.flush()
       while True:
+        print("Iteration: %d" % cur_iteration)
         new_epoch_float = n_examples_processed / float(num_examples)
         new_epoch_track = int(new_epoch_float)
         if cur_iteration == 0 or (new_epoch_track - cur_epoch_track >= 1):
