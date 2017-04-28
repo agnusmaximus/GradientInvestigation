@@ -354,7 +354,7 @@ def train():
             sys.stdout.flush()
             t_evaluate_end = time.time()
             evaluate_times.append(t_evaluate_end-t_evaluate_start)
-            FLAGS.learning_rate *= 10
+            FLAGS.learning_rate *= 5
 
         cur_epoch_track = max(cur_epoch_track, new_epoch_track)
         feed_dict = get_feed_dict(FLAGS.batch_size)
