@@ -227,7 +227,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
             plt.cla()
             plot_name = "Variable%d_iters_%d_to_%d" % (variable_index, start_index, iteration)
             for weight_index in range(num_weights_per_variable[variable_index]):
-                values = [abs(gradient_track[iteration_index][variable_index][weight_index]) for iteration_index in range(start_index, iteration)]
+                values = [gradient_track[iteration_index][variable_index][weight_index] for iteration_index in range(start_index, iteration)]
                 plt.plot(list(range(start_index, iteration)), values)
             plt.xlabel("Iteration")
             plt.ylabel("Gradient Magnitude")
