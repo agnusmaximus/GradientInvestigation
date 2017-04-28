@@ -200,7 +200,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
             name = "Variable=%dWeight=%d" % (variable_index, weight_index)
             gradient_track[iteration].append((name, flattened_gradient[weight_index]))
 
-    largest_variables = sorted(gradient_track[iteration], key=lambda x : abs(x[1]))
+    largest_variables = sorted(gradient_track[iteration], key=lambda x : -abs(x[1]))
     print("Largest variables:")
     for k in largest_variables[:5]:
         print(k)
