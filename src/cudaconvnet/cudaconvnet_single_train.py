@@ -195,7 +195,7 @@ def get_next_fractional_batch(fractional_images, fractional_labels, cur_index, b
   return next_batch_images, next_batch_labels, next_index % fractional_labels.shape[0]
 
 def track_gradients(gradients_materialized, gradient_track, iteration):
-    PLOT_INTERVAL = 50
+    PLOT_INTERVAL = 500
 
     assert(iteration not in gradient_track.keys())
 
