@@ -193,17 +193,19 @@ def get_next_fractional_batch(fractional_images, fractional_labels, cur_index, b
 
 def track_gradients(gradients_materialized, gradient_track, iteration):
     assert(iteration not in gradient_track.keys())
-    gradient_track[iteration] = []
-    for variable_index, (variable, gradient) in enumerate(gradients_materialized):
-        flattened_gradient = gradient.flatten()
-        for weight_index in range(len(flattened_gradient)):
-            name = "Variable=%dWeight=%d" % (variable_index, weight_index)
-            gradient_track[iteration].append((name, flattened_gradient[weight_index]))
 
-    largest_variables = sorted(gradient_track[iteration], key=lambda x : -abs(x[1]))
-    print("Largest variables:")
-    for k in largest_variables[:5]:
-        print(k)
+    # gradient_track[iteration][variable_index] = [w1,w2,w3...]
+
+    gradient_track[iteration] = {}
+    for variable_index, (variable, gradient) in enumerate(gradients_materialized):
+        gradient_track[iteration][variable_index] = list(gradient.flatten())
+
+    for variable_index, list_gradients in gradient_track[iteration].items():
+        list_gradients_with_weight_indices = zip(range(len(list_gradients)), list_gradients)
+        largest_variables = sorted(list_gradients_with_weight_indices, key=lambda x : -abs(x[1]))
+        print("Largest variables for variable %d:" % variable_index)
+        for k in largest_variables[:5]:
+            print(k)
 
 def train():
     """Train CIFAR-10 for a number of steps."""
