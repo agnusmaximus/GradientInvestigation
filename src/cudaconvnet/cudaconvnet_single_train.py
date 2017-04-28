@@ -311,13 +311,13 @@ def train():
         print("Iteration: %d" % cur_iteration)
         new_epoch_float = n_examples_processed / float(num_examples)
         new_epoch_track = int(new_epoch_float)
-        if cur_iteration == 0 or (new_epoch_track - cur_epoch_track >= 1):
+        if cur_iteration != 0 and (new_epoch_track - cur_epoch_track >= 1):
             last_epoch_evaluated = new_epoch_float
             print("Evaluating...")
             sys.stdout.flush()
             t_evaluate_start = time.time()
-            #acc, loss = model_evaluate(sess)
-            #print("IInfo: %f %f %f %f" % (t_evaluate_start-sum(evaluate_times), new_epoch_float, acc, loss))
+            acc, loss = model_evaluate(sess)
+            print("IInfo: %f %f %f %f" % (t_evaluate_start-sum(evaluate_times), new_epoch_float, acc, loss))
             sys.stdout.flush()
             t_evaluate_end = time.time()
             evaluate_times.append(t_evaluate_end-t_evaluate_start)
