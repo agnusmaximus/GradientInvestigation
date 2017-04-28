@@ -195,7 +195,7 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
     assert(iteration not in gradient_track.keys())
     gradient_track[iteration] = []
     for variable_index, (variable, gradient) in enumerate(gradients_materialized):
-        flattened_gradient = gradients_materialized[variable_index].flatten()
+        flattened_gradient = gradient.flatten()
         for weight_index in range(len(flattened_gradient)):
             name = "Variable=%dWeight=%d" % (variable_index, weight_index)
             gradient_track[iteration].append((name, flattened_gradient[weight_index]))
