@@ -203,10 +203,11 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
     gradient_track[iteration] = {}
 
     num_variables = len(gradients_materialized)
-    num_weights_per_variable = [len(gradient) for i, (variable, gradient) in enumerate(gradients_materialized)]
+    num_weights_per_variable = [len(gradient.flatten()) for i, (gradient, variable) in enumerate(gradients_materialized)]
 
-    for variable_index, (variable, gradient) in enumerate(gradients_materialized):
+    for variable_index, (gradient, variable) in enumerate(gradients_materialized):
         gradient_track[iteration][variable_index] = list(gradient.flatten())
+        #gradient_track[iteration][variable_index] = list(variable.flatten())
 
     """for variable_index, list_gradients in gradient_track[iteration].items():
         list_gradients_with_weight_indices = zip(range(len(list_gradients)), list_gradients)
@@ -225,10 +226,23 @@ def track_gradients(gradients_materialized, gradient_track, iteration):
         start_index = max(0, iteration - PLOT_INTERVAL)
         for variable_index in range(num_variables):
             plt.cla()
-            plot_name = "Variable%d_iters_%d_to_%d" % (variable_index, start_index, iteration)
+            plot_name = "Variable%d_iters_%d_to_%d_nweights=%d" % (variable_index, start_index, iteration, num_weights_per_variable[variable_index])
+            #evolutions = []
             for weight_index in range(num_weights_per_variable[variable_index]):
-                values = [abs(gradient_track[iteration_index][variable_index][weight_index]) for iteration_index in range(start_index, iteration)]
+                values = np.array([abs(gradient_track[iteration_index][variable_index][weight_index]) for iteration_index in range(start_index, iteration)])
                 plt.plot(list(range(start_index, iteration)), values)
+                #evolutions.append(values)
+            
+            #pairs = []
+            #for i in range(len(evolutions)):
+            #    for j in range(len(evolutions)):
+            #        if i != j:
+            #            diff = np.linalg.norm(evolutions[i]-evolutions[j])
+            #            pairs.append((evolutions[i], evolutions[j], diff))
+            #pairs.sort(key=lambda x : x[2])
+            #plt.plot(list(range(start_index, iteration)), pairs[0][0])
+            #plt.plot(list(range(start_index, iteration)), pairs[0][1])
+
             plt.xlabel("Iteration")
             plt.ylabel("Gradient Magnitude")
             plt.title("%s Evolution of Gradient Weight Magnitudes" % plot_name)
@@ -266,7 +280,7 @@ def train():
         labels = tf.placeholder(tf.int32, shape=(None,))
         logits = cifar10.inference(images, use_dropout=FLAGS.dropout)
         loss_op = cifar10.loss(logits, labels, scope_name)
-        train_op, grads, lr_placeholder = cifar10.train(loss_op, scope_name)
+        train_op, grads = cifar10.train(loss_op, scope_name)
         top_k_op = tf.nn.in_top_k(logits, labels, 1)
 
     # We keep track of all variables of the model for saving
@@ -357,10 +371,9 @@ def train():
 
         cur_epoch_track = max(cur_epoch_track, new_epoch_track)
         feed_dict = get_feed_dict(FLAGS.batch_size)
-        feed_dict[lr_placeholder] = FLAGS.learning_rate
         results = sess.run([train_op, grads], feed_dict=feed_dict)
         grads_materialized = results[1]
-        #track_gradients(grads_materialized, gradient_track, cur_iteration)
+        track_gradients(grads_materialized, gradient_track, cur_iteration)
         cur_iteration += 1
         n_examples_processed += FLAGS.batch_size
 

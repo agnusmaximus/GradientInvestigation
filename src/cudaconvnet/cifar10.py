@@ -356,6 +356,15 @@ def _add_loss_summaries(total_loss):
 
   return loss_averages_op
 
+def sparsify(gradient):
+  percentile = .90
+  flattened = tf.reshape(gradient, [-1])
+  num_to_get = int(flattened.get_shape().as_list()[0] * (1-percentile))
+  num_to_get = 10
+  print(flattened.get_shape().as_list()[0], num_to_get)
+  top_values, top_indices = tf.nn.top_k(tf.abs(flattened), k=num_to_get)
+  cutoff = tf.reduce_min(top_values)
+  return tf.cast(tf.abs(gradient) > cutoff, gradient.dtype) * gradient
 
 def train(total_loss, scope_name):
   """Train CIFAR-10 model.
@@ -372,15 +381,17 @@ def train(total_loss, scope_name):
   """
 
   # Compute gradients.
-  #opt = tf.train.GradientDescentOptimizer(FLAGS.learning_rate)
-  learning_rate = tf.placeholder(tf.float32, shape=())
-  opt = tf.train.MomentumOptimizer(learning_rate, .1)
+  opt = tf.train.GradientDescentOptimizer(FLAGS.learning_rate)
   grads = opt.compute_gradients(total_loss)
+
+  sparse_grads = [sparsify(x[0]) for x in grads]
+  sparse_grads = zip(sparse_grads, [x[1] for x in grads])
 
   # Apply gradients.
   apply_gradient_op = opt.apply_gradients(grads)
+  #apply_gradient_op = opt.apply_gradients(sparse_grads)
 
-  return apply_gradient_op, grads, learning_rate
+  return apply_gradient_op, grads
 
 
 def maybe_download_and_extract():
